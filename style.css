@@ -1,0 +1,86 @@
+body {
+    font-family: 'IBM Plex Mono', monospace;
+    background-color: #f5f5f5;
+    transition: background-color 0.3s;
+}
+
+.dark-mode {
+    background-color: #222;
+    color: #f5f5f5;
+}
+
+.neo-border {
+    border: 3px solid #000;
+    box-shadow: 8px 8px 0 #000;
+}
+
+.neo-border-dark {
+    border: 3px solid #f5f5f5;
+    box-shadow: 8px 8px 0 #f5f5f5;
+}
+
+.response-container {
+    border-left: 3px solid #000;
+    padding-left: 1rem;
+}
+
+.dark-mode .response-container {
+    border-left: 3px solid #f5f5f5;
+}
+
+textarea {
+    resize: none;
+    outline: none;
+}
+
+textarea:focus {
+    border: 3px solid #000 !important;
+}
+
+.dark-mode textarea:focus {
+    border: 3px solid #f5f5f5 !important;
+}
+
+.toggle-checkbox:checked {
+    right: 0;
+    background-color: #000;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #f5f5f5;
+}
+
+.dark-mode .toggle-checkbox:checked {
+    background-color: #f5f5f5;
+}
+
+.dark-mode .toggle-checkbox:checked + .toggle-label {
+    background-color: #000;
+}
+
+.typing-indicator span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #000;
+    border-radius: 0;
+    margin: 0 2px;
+    animation: bounce 1.4s infinite ease-in-out;
+}
+
+.dark-mode .typing-indicator span {
+    background-color: #f5f5f5;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-8px); }
+}

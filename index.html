@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeRoaster - AI Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            background-color: #f5f5f5;
+            transition: background-color 0.3s;
+        }
+        
+        .dark-mode {
+            background-color: #222;
+            color: #f5f5f5;
+        }
+        
+        .neo-border {
+            border: 3px solid #000;
+            box-shadow: 8px 8px 0 #000;
+        }
+        
+        .neo-border-dark {
+            border: 3px solid #f5f5f5;
+            box-shadow: 8px 8px 0 #f5f5f5;
+        }
+        
+        .response-container {
+            border-left: 3px solid #000;
+            padding-left: 1rem;
+        }
+        
+        .dark-mode .response-container {
+            border-left: 3px solid #f5f5f5;
+        }
+        
+        textarea {
+            resize: none;
+            outline: none;
+        }
+        
+        textarea:focus {
+            border: 3px solid #000 !important;
+        }
+        
+        .dark-mode textarea:focus {
+            border: 3px solid #f5f5f5 !important;
+        }
+        
+        .toggle-checkbox:checked {
+            right: 0;
+            background-color: #000;
+        }
+        
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #f5f5f5;
+        }
+        
+        .dark-mode .toggle-checkbox:checked {
+            background-color: #f5f5f5;
+        }
+        
+        .dark-mode .toggle-checkbox:checked + .toggle-label {
+            background-color: #000;
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #000;
+            border-radius: 0;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        
+        .dark-mode .typing-indicator span {
+            background-color: #f5f5f5;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 flex justify-between items-center">
+            <div class="flex items-center">
+                <h1 class="text-3xl font-bold mr-4">CODE<span class="text-red-600">ROASTER</span></h1>
+                <span class="text-xs bg-black text-white px-2 py-1">BETA</span>
+            </div>
+            
+            <!-- Dark mode toggle -->
+            <!-- <div class="relative flex items-center">
+                <span class="mr-2 text-sm">DARK</span>
+                <input type="checkbox" id="darkModeToggle" class="toggle-checkbox hidden">
+                <label for="darkModeToggle" class="toggle-label block w-12 h-6 bg-black cursor-pointer"></label>
+                <span class="ml-2 text-sm">LIGHT</span>
+            </div> -->
+        </header>
+        
+        <!-- Input Section -->
+        <div class="mb-8 neo-border bg-white p-4">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="font-bold">YOUR CODE</h2>
+                <div class="flex space-x-2">
+                    <!-- <button class="bg-black text-white px-3 py-1 text-sm font-bold hover:bg-gray-800 transition">CLEAR</button> -->
+                    <button id="submitBtn" class="bg-red-600 text-white px-3 py-1 text-sm font-bold hover:bg-red-700 transition">ROAST IT</button>
+                </div>
+            </div>
+            <textarea id="userInput" class="w-full h-48 p-3 bg-gray-100 border-2 border-black font-mono text-sm focus:bg-white" placeholder="Paste your code here..."></textarea>
+        </div>
+        
+        <!-- Response Section -->
+        <div class="neo-border bg-white p-4 min-h-64">
+            <h2 class="font-bold mb-2">AI RESPONSE</h2>
+            <div id="responseArea" class="response-container font-mono text-sm whitespace-pre-wrap">
+                <div class="text-gray-500">// response will appear here</div>
+            </div>
+            
+            <!-- Typing indicator (hidden by default) -->
+            <div id="typingIndicator" class="typing-indicator mt-4 hidden">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-8 text-xs text-center text-gray-500">
+            <p>CodeRoaster v0.1.0 | Cook your code until welldone</p>
+        </footer>
+    </div>
+    <script>
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById("darkModeToggle");
+        const body = document.body;
+  
+        // Submit button functionality
+        const submitBtn = document.getElementById("submitBtn");
+        const userInput = document.getElementById("userInput");
+        const responseArea = document.getElementById("responseArea");
+        const typingIndicator = document.getElementById("typingIndicator");
+  
+        submitBtn.addEventListener("click", () => {
+          const code = userInput.value.trim();
+          console.log('test masuk');
+          
+          if (code) {
+          console.log('nasuk')
+            responseArea.innerHTML = "";
+            typingIndicator.classList.remove("hidden");
+  
+            fetch("/fetch/ai", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ message: code }),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                typingIndicator.classList.add("hidden");
+                responseArea.innerHTML = data.reply || "Tidak ada balasan.";
+                responseArea.scrollIntoView({ behavior: "smooth" });
+              })
+              .catch((err) => {
+                typingIndicator.classList.add("hidden");
+                responseArea.innerHTML = "Terjadi error saat mengambil respon.";
+              });
+          }
+        });
+  
+        // Add keyboard shortcut (Ctrl+Enter to submit)
+        userInput.addEventListener("keydown", (e) => {
+          if (e.ctrlKey && e.key === "Enter") {
+            submitBtn.click();
+          }
+        });
+      </script>
+</body>
+</html>
