@@ -27,7 +27,7 @@ app.post("/fetch/ai", async (req, res) => {
     const reply = await fetchAI(message);
     res.json({ reply });
   } catch (error) {
-    res.status(500).json({ error: "AI fetch failed" });
+    res.status(500).json({ error: error });
   }
 });
 
