@@ -2,13 +2,13 @@
   "name": "code-roaster",
   "version": "1.0.0",
   "type": "module",
-  "main": "main.js", 
+  "main": "main.js",
   "scripts": {
     "start": "node main.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "dotenv": "^17.2.1",
-    "express": "^5.1.0",
-    "openai": "^5.12.0"
+    "express": "^5.1.0"
   }
 }

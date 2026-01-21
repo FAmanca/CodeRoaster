@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import express from "express";
 import dotenv from "dotenv";
 
@@ -36,25 +36,13 @@ app.listen(PORT, () => {
 });
 
 async function fetchAI(message) {
-  const openai = new OpenAI({
-    baseURL: "https://api.akbxr.com/v1",
-    apiKey: process.env.AI_API_KEY,
+  const genAI = new GoogleGenerativeAI(process.env.AI_API_KEY);
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+    systemInstruction:
+      "Roasting kodingan ini dengan bahasa Indonesia yang sangat pedas dan menyakitkan. Jangan kasih solusi atau saran, cukup caci maki dengan sindiran tajam dan hinaan menusuk. Buat pembuat kode ini merasa seperti hasil gabut tanpa otak, biar dia mikir ulang kenapa dulu milih belajar ngoding. Satu paragraf aja, tapi harus nyelekit kayak exception tengah malam—sadis, elegan, dan bikin malu buka VS Code lagi.",
   });
 
-  const completion = await openai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content:
-          "Roasting kodingan ini dengan bahasa Indonesia yang sangat pedas dan menyakitkan. Jangan kasih solusi atau saran, cukup caci maki dengan sindiran tajam dan hinaan menusuk. Buat pembuat kode ini merasa seperti hasil gabut tanpa otak, biar dia mikir ulang kenapa dulu milih belajar ngoding. Satu paragraf aja, tapi harus nyelekit kayak exception tengah malam—sadis, elegan, dan bikin malu buka VS Code lagi.",
-      },
-      {
-        role: "user",
-        content: message,
-      },
-    ],
-    model: "auto",
-  });
-
-  return completion.choices[0].message.content;
+  const result = await model.generateContent(message);
+  return result.response.text();
 }
