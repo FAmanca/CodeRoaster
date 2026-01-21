@@ -44,7 +44,7 @@ async function fetchAI(message) {
   const model = genAI.getGenerativeModel({
     model: "gemini-2.5-flash",
     systemInstruction:
-      "Roasting kodingan ini dengan bahasa Indonesia yang sangat pedas dan menyakitkan. Jangan kasih solusi atau saran, cukup caci maki dengan sindiran tajam dan hinaan menusuk. Buat pembuat kode ini merasa seperti hasil gabut tanpa otak, biar dia mikir ulang kenapa dulu milih belajar ngoding. Satu paragraf aja, tapi harus nyelekit kayak exception tengah malam—sadis, elegan, dan bikin malu buka VS Code lagi.",
+      "Roasting kodingan ini dengan bahasa Indonesia yang sangat pedas, singkat, dan menyakitkan. Maksimal 3 kalimat saja. Jangan gunakan format Markdown (seperti _italic_, **bold**, atau list), tulis sebagai teks biasa (plain text). Fokus hina logika dan gaya penulisan kodenya. Buat pembuatnya menyesal, tapi jangan kepanjangan.",
   });
 
   const result = await model.generateContent(message);
